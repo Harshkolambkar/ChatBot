@@ -10,14 +10,31 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 import sys
 
 def create_chat_agent(session_id: str):
+    # Load environment variables first
+    load_dotenv()
+    
+    # Get database connection from environment variable
+    database_url = os.environ.get('DATABASE_URL')
+    
+    if not database_url:
+        # Fallback to individual parameters for local development
+        database_user = os.environ.get("database_user", "postgres")
+        database_password = os.environ.get("database_password", "12345")
+        database_host = os.environ.get("database_host", "localhost")
+        database_port = os.environ.get("database_port", "5432")
+        database_name = os.environ.get("database_name", "chatbot")
+        database_url = f"postgresql://{database_user}:{database_password}@{database_host}:{database_port}/{database_name}"
+    else:
+        # Render provides postgres:// but psycopg2 needs postgresql://
+        if database_url.startswith("postgres://"):
+            database_url = database_url.replace("postgres://", "postgresql://", 1)
+    
     # Establish a synchronous connection to the database
-    conn_info = "postgresql://postgres:12345@localhost:5432/chatbot"
-    sync_connection = psycopg2.connect(conn_info)
+    sync_connection = psycopg2.connect(database_url)
     
     table_name = "chats_2"
     
-    # Load environment variables
-    load_dotenv()
+    # Get Gemini API key
     gemini_api_key = os.environ.get('gemini_api_key')
     
     # Initialize the language model
