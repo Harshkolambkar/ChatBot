@@ -1,35 +1,44 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import models, database
-from routers import users, sessions, Chat  # Capital C for Chat
-
-app = FastAPI(
-    title="ChatBot API",
-    description="A comprehensive chatbot API with user management and chat functionality",
-    version="1.0.0"
-)
-
-# Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Vite's default port
-    allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
-)
+from database import engine, Base
+from routers import users, sessions, Chat
+import os
 
 # Create database tables
-models.Base.metadata.create_all(bind=database.engine)
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(title="ChatBot API")
+
+# Configure CORS
+origins = [
+    "http://localhost:5173",  # Local development
+    "http://localhost:3000",
+    "https://*.onrender.com",  # Render frontend
+    os.getenv("FRONTEND_URL", ""),  # Production frontend URL
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # For now, allow all origins (you can restrict later)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Include routers
-app.include_router(users.router)
-app.include_router(sessions.router)
-app.include_router(Chat.router)  # Capital C for Chat
+app.include_router(users.router, prefix="/users", tags=["users"])
+app.include_router(sessions.router, prefix="/sessions", tags=["sessions"])
+app.include_router(Chat.router, prefix="/chat", tags=["chat"])
 
-print("🚀 Starting application...")
-print("✅ Application started successfully!")
+@app.get("/")
+def read_root():
+    return {"message": "ChatBot API is running!", "status": "healthy"}
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
 
 if __name__ == "__main__":
     import uvicorn
-    print("🌐 Starting server on http://localhost:8000")
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)

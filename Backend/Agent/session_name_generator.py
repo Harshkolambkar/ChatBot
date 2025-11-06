@@ -1,6 +1,21 @@
 ''' This file provides a function to generate session names using LangChain and Gemini '''
 import os
 from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Also try loading from parent directory
+from pathlib import Path
+env_path = Path(__file__).parent / '.env'
+load_dotenv(dotenv_path=env_path)
+
+# Get API key
+GEMINI_API_KEY = os.getenv("gemini_api_key") or os.getenv("GEMINI_API_KEY")
+
+if not GEMINI_API_KEY:
+    raise ValueError("Gemini API key not found in environment variables")
+
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
@@ -15,14 +30,8 @@ def session_name_generator(topic: str) -> str:
     Returns:
         str: A short name for the session
     """
-    load_dotenv()
-
-    gemini_api_key = os.environ.get('gemini_api_key')
-    if not gemini_api_key:
-        raise ValueError("GEMINI_API_KEY not found in environment variables")
-
     # Initialize the LLM
-    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=gemini_api_key)
+    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=GEMINI_API_KEY)
 
     # Create a prompt template
     name_generator = PromptTemplate(
