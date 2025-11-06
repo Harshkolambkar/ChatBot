@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { Session, Message, ChatState } from '../types';
-import { api } from '../api';
+import { api } from '../api/api';
 import { storage } from '../utils/storage';
 
 const useChat = () => {
