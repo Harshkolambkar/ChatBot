@@ -1,7 +1,8 @@
 import type { Message, Session, UserCreateResponse, User } from '../types';
 import { storage } from '../utils/storage';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+// Remove trailing slash from API_BASE_URL if present
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/$/, '');
 
 class ApiError extends Error {
   status: number;
