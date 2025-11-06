@@ -9,18 +9,11 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="ChatBot API")
 
-# Configure CORS
-origins = [
-    "http://localhost:5173",  # Local development
-    "http://localhost:3000",
-    "https://*.onrender.com",  # Render frontend
-    os.getenv("FRONTEND_URL", ""),  # Production frontend URL
-]
-
+# Configure CORS - Allow all origins for now
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # For now, allow all origins (you can restrict later)
-    allow_credentials=True,
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=False,  # Set to False when using allow_origins=["*"]
     allow_methods=["*"],
     allow_headers=["*"],
 )
