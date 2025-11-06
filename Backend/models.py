@@ -15,7 +15,7 @@ class SessionModel(Base):
     id = Column(Integer, Sequence('session_id_seq'), primary_key=True, index=True, nullable=False)
     user_id = Column(Integer, index=True, nullable=False)
     session_token = Column(VARCHAR(255), unique=True, index=True, nullable=False)
-    session_short_name = Column(Text(100), index=True, nullable=True)
+    session_short_name = Column(String(100), index=True, nullable=True)
 
 class ChatModel(Base):
     __tablename__ = "chats_2"
