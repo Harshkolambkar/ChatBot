@@ -19,9 +19,9 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(users.router, prefix="/users", tags=["users"])
-app.include_router(sessions.router, prefix="/sessions", tags=["sessions"])
-app.include_router(Chat.router, prefix="/chat", tags=["chat"])
+app.include_router(users.router, tags=["users"])
+app.include_router(sessions.router, tags=["sessions"])
+app.include_router(Chat.router, tags=["chat"])
 
 @app.get("/")
 def read_root():
