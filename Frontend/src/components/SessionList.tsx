@@ -77,13 +77,17 @@ export function SessionList({ sessions, activeSessionId, onSessionSelect, onNewS
           <div className="px-4 pb-4">
             <div className="grid grid-cols-2 gap-2">
               {tools.map((tool) => (
-                <button
+                <div
                   key={tool.label}
-                  className="flex flex-col items-center gap-2 rounded-lg border border-slate-200 bg-white p-3 transition-all hover:border-slate-300 hover:shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:hover:border-slate-600"
+                  className="relative flex flex-col items-center gap-2 rounded-lg border border-slate-200 bg-white p-3 opacity-60 cursor-not-allowed dark:border-slate-700 dark:bg-slate-800"
+                  style={{opacity: 0.6}}
                 >
                   <tool.icon className={`h-5 w-5 ${tool.color}`} />
                   <span className="text-center text-slate-700 dark:text-slate-300">{tool.label}</span>
-                </button>
+                  <div className="absolute top-2 right-2 bg-gray-700 text-gray-600 text-xs px-2 py-0.5 rounded-full dark:bg-gray-700 dark:text-gray-400 border">
+                    Soon
+                  </div>
+                </div>
               ))}
             </div>
           </div>
