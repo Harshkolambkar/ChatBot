@@ -11,7 +11,7 @@ import schemas.chat_schemas as chat_schemas
 agent_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Agent'))
 sys.path.insert(0, agent_path)
 
-from Backend.Agent.Chat import chat_with_agent
+from Agent.Chat import chat_with_agent
 
 import schemas.sessions_schemas as session_schemas
 import crud.sessions_crud as sessions_crud
