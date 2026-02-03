@@ -36,6 +36,7 @@
     "@radix-ui/react-toggle": "^1.1.10",
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.0.7",
+    "@tailwindcss/typography": "^0.5.19",
     "class-variance-authority": "^0.6.1",
     "clsx": "^1.2.1",
     "cmdk": "^0.2.1",
@@ -47,8 +48,10 @@
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.66.0",
+    "react-markdown": "^10.1.0",
     "react-resizable-panels": "^0.0.55",
     "recharts": "^2.15.4",
+    "remark-gfm": "^4.0.1",
     "sonner": "^0.6.2",
     "tailwind-merge": "^1.14.0",
     "vaul": "^0.2.3"

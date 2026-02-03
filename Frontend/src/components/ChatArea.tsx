@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Send } from "lucide-react";
 import { useAuth } from "./AuthContext";
+import { MarkdownFormatter } from "./MarkdownFormatter";
 import type { Message } from "../types";
 
 interface ChatAreaProps {
@@ -53,7 +54,11 @@ export function ChatArea({ messages, onSendMessage, sessionTitle }: ChatAreaProp
                       : "bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-100"
                   }`}
                 >
-                  <p>{message.messages}</p>
+                  {message.sender === "ai" ? (
+                    <MarkdownFormatter content={message.messages} />
+                  ) : (
+                    <p>{message.messages}</p>
+                  )}
                   <p className={`mt-1 text-xs ${message.sender === "human" ? "text-blue-100 dark:text-blue-200" : "text-slate-500 dark:text-slate-400"}`}>
                     {message.timestamp}
                   </p>
