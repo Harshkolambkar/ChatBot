@@ -3,7 +3,7 @@ import { ScrollArea } from "./ui/scroll-area";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback } from "./ui/avatar";
-import { Send } from "lucide-react";
+import { Send, Plus } from "lucide-react";
 import { useAuth } from "./AuthContext";
 import { MarkdownFormatter } from "./MarkdownFormatter";
 import type { Message } from "../types";
@@ -12,19 +12,79 @@ interface ChatAreaProps {
   readonly messages: Message[];
   readonly onSendMessage: (message: string) => void;
   readonly sessionTitle: string;
+  readonly hasActiveSession: boolean;
+  readonly onNewSession: () => void;
 }
 
-export function ChatArea({ messages, onSendMessage, sessionTitle }: ChatAreaProps) {
+export function ChatArea({ 
+  messages, 
+  onSendMessage, 
+  sessionTitle,
+  hasActiveSession,
+  onNewSession
+}: ChatAreaProps) {
   const { user } = useAuth();
   const [input, setInput] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.trim()) {
+    if (input.trim() && hasActiveSession) {
       onSendMessage(input);
       setInput("");
     }
   };
+
+  // If no active session, show the "New Chat" prompt
+  if (!hasActiveSession) {
+    return (
+      <div className="flex h-full flex-col bg-white dark:bg-slate-950">
+        {/* Header - Fixed */}
+        <div className="flex-shrink-0 border-b p-4 dark:border-slate-800">
+          <h2 className="dark:text-slate-100">Chat</h2>
+        </div>
+        
+        {/* Empty State - Centered */}
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="mb-6">
+              <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-800">
+                <Plus className="h-8 w-8 text-slate-600 dark:text-slate-300" />
+              </div>
+            </div>
+            <h3 className="mb-2 text-lg font-semibold text-slate-900 dark:text-slate-100">
+              No Chat Selected
+            </h3>
+            <p className="mb-6 text-sm text-slate-600 dark:text-slate-400">
+              Create a new chat to start a conversation with the AI
+            </p>
+            <Button
+              onClick={onNewSession}
+              className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              New Chat
+            </Button>
+          </div>
+        </div>
+
+        {/* Input - Fixed at bottom (Disabled) */}
+        <div className="flex-shrink-0 border-t p-4 dark:border-slate-800">
+          <form onSubmit={handleSubmit} className="flex gap-2">
+            <Input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Start a new chat to begin..."
+              className="flex-1"
+              disabled
+            />
+            <Button type="submit" size="icon" disabled>
+              <Send className="h-4 w-4" />
+            </Button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-full flex-col bg-white dark:bg-slate-950">

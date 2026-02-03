@@ -179,11 +179,14 @@ function ChatInterface() {
         const { [sessionToDelete]: _, ...remainingMessages } = messagesBySession;
         setMessagesBySession(remainingMessages);
         
-        // If the deleted session was active, switch to another session
+        // If the deleted session was active, switch to another session or clear
         if (activeSessionId === sessionToDelete) {
           const remainingSessions = sessions.filter(s => s.id !== sessionToDelete);
           if (remainingSessions.length > 0) {
             setActiveSessionId(remainingSessions[0].id);
+          } else {
+            // No sessions left, clear the active session
+            setActiveSessionId("");
           }
         }
       } catch (error) {
@@ -217,6 +220,8 @@ function ChatInterface() {
             messages={messagesBySession[activeSessionId] || []}
             onSendMessage={handleSendMessage}
             sessionTitle={sessions.find(s => s.id === activeSessionId)?.title || "Chat"}
+            hasActiveSession={activeSessionId !== ""}
+            onNewSession={handleNewSession}
           />
         </div>
       </div>
